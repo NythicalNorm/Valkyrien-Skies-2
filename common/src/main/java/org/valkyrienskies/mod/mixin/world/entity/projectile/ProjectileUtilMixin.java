@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.world.RaycastUtilsKt;
 
-@Mixin(ProjectileUtil.class)
+@Mixin(value = ProjectileUtil.class, priority = 1100)
 public class ProjectileUtilMixin {
 
     @Inject(

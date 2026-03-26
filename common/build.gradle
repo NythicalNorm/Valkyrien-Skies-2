@@ -28,6 +28,9 @@ dependencies {
     // Weather2 1.20.1
     modCompileOnly("curse.maven:weather-storms-tornadoes-237746:5244118")
 
+    modCompileOnly("dev.architectury:architectury-fabric:9.2.14")
+    modCompileOnly("maven.modrinth:power-grid:${create_power_grid_version}-fabric")
+
     // TIS-3d
     modCompileOnly("maven.modrinth:tis3d:${tis3d_version}")
 
