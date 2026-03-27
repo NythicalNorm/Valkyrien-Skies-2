@@ -23,14 +23,12 @@ import org.joml.primitives.AABBdc
 import org.valkyrienskies.core.api.ships.ClientShip
 import org.joml.primitives.LineSegmentf
 import org.valkyrienskies.core.api.ships.properties.ShipId
-import org.valkyrienskies.core.game.ships.ShipObjectClient
 import org.valkyrienskies.core.util.expand
 import org.valkyrienskies.mod.common.getShipsIntersecting
 import org.valkyrienskies.mod.common.shipObjectWorld
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.mod.util.scale
-import java.util.Vector
 import java.util.function.BiFunction
 import java.util.function.Function
 import java.util.function.Predicate
@@ -67,7 +65,7 @@ fun Level.clipIncludeShips(
         val chopParam = Vector2d()
         // Pad AABB size to increase raycast tolerance
         val expandedAABB = AABBd(ship.worldAABB).expand(1.0)
-        val intersectType = expandedAABB.intersectsLineSegment(clipSegment, chopParam);
+        val intersectType = expandedAABB.intersectsLineSegment(clipSegment, chopParam)
         if (intersectType == Intersectionf.OUTSIDE) {
             continue
         }
@@ -216,7 +214,8 @@ fun Level.raytraceEntities(
     origEndVecM: Vec3,
     origBoundingBoxM: AABB,
     filter: Predicate<Entity>,
-    maxDistance2: Double
+    maxDistance2: Double,
+    originalHitResult: EntityHitResult?
 ): EntityHitResult? {
     var distance2 = maxDistance2
     var resultEntity: Entity? = null
@@ -273,9 +272,13 @@ fun Level.raytraceEntities(
         checkEntities(entities, start.toMinecraft(), end.toMinecraft(), scale)
     }
 
-    return if (resultEntity == null) {
-        null
-    } else EntityHitResult(resultEntity, location)
+    return if (originalHitResult != null && origStartVecM.distanceToSqr(originalHitResult.location) < distance2) {
+        originalHitResult
+    } else if (resultEntity == null) {
+        return null
+    } else {
+        EntityHitResult(resultEntity, location)
+    }
 }
 
 fun BlockGetter.vanillaClip(context: ClipContext): BlockHitResult =

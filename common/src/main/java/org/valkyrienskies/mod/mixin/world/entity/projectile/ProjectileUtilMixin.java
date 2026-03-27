@@ -1,36 +1,34 @@
 package org.valkyrienskies.mod.mixin.world.entity.projectile;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import java.util.function.Predicate;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.world.RaycastUtilsKt;
 
 @Mixin(value = ProjectileUtil.class, priority = 1100)
 public class ProjectileUtilMixin {
 
-    @Inject(
-        at = @At("RETURN"),
-        method = "getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;",
-        cancellable = true
+    @WrapMethod(
+        method = "getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"
     )
-    private static void beforeGetEntityHitResult(
-        final Entity entity, final Vec3 vec3, final Vec3 vec32, final AABB aABB, final Predicate<Entity> predicate,
-        final double d, final CallbackInfoReturnable<@Nullable EntityHitResult> cir) {
+    private static EntityHitResult beforeGetEntityHitResult(
+        Entity entity, Vec3 startVec, Vec3 endVec, AABB aABB, Predicate<Entity> predicate, double distance,
+        Operation<EntityHitResult> original) {
 
-        if (cir.getReturnValue() != null || !VSGameUtilsKt.getShipsIntersecting(entity.level(), aABB).iterator().hasNext()) {
-            return;
+        EntityHitResult originalHit = original.call(entity, startVec, endVec, aABB, predicate, distance);
+
+        if (!VSGameUtilsKt.getShipsIntersecting(entity.level(), aABB).iterator().hasNext()) {
+            return null;
         }
 
-        cir.setReturnValue(RaycastUtilsKt.raytraceEntities(entity.level(), entity, vec3, vec32, aABB, predicate, d));
+        return RaycastUtilsKt.raytraceEntities(entity.level(), entity, startVec, endVec, aABB, predicate, distance, originalHit);
     }
 
 }
