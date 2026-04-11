@@ -138,7 +138,8 @@ dependencies {
     modCompileOnly("maven.modrinth:create-utilities:0.2.0+1.20.1")
 
     modImplementation("dev.architectury:architectury-forge:9.2.14")
-    modImplementation("maven.modrinth:power-grid:${create_power_grid_version}")
+    //modImplementation("maven.modrinth:power-grid:${create_power_grid_version}")
+    modImplementation(files('build/libs/powergrid-mc1.20.1-0.5.4-distance-fix.jar'))
 
     modImplementation("teamreborn:energy:${energy_version}") {
         transitive = false

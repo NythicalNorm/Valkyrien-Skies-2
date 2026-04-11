@@ -1,4 +1,4 @@
-package org.valkyrienskies.mod.mixin.mod_compat.power_grid;
+package org.valkyrienskies.mod.forge.mixin.compat.power_grid;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

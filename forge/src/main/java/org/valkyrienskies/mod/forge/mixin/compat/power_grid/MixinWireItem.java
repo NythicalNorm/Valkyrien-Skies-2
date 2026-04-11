@@ -1,4 +1,4 @@
-package org.valkyrienskies.mod.mixin.mod_compat.power_grid;
+package org.valkyrienskies.mod.forge.mixin.compat.power_grid;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -18,7 +18,7 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 public class MixinWireItem {
 
     // cancels ship to ship and ship to world connections
-    @WrapMethod(method = "connect")
+    @WrapMethod(method = "connect", remap = false)
     private static InteractionResultHolder<BlockWireEntity> stopShipToWorldConnections(
         Level level, ItemStack stack,
         Player player, IWireEndpoint endpoint1, IWireEndpoint endpoint2,

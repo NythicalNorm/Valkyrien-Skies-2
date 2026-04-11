@@ -36,6 +36,9 @@ object LoadedMods {
     }
 
     @JvmStatic
+    val powergrid by CompatInfo("org.patryk3211.powergrid.PowerGrid")
+
+    @JvmStatic
     val bluemap: String by lazy {
         try {
             val claz = Class.forName("de.bluecolored.bluemap.core.BlueMap")

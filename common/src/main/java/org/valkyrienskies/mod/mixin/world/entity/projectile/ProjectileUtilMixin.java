@@ -8,11 +8,12 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.patryk3211.powergrid.utility.IComplexRaycast;
 import org.spongepowered.asm.mixin.Mixin;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.world.RaycastUtilsKt;
 
-@Mixin(value = ProjectileUtil.class, priority = 1100)
+@Mixin(value = ProjectileUtil.class, priority = 900)
 public class ProjectileUtilMixin {
 
     @WrapMethod(
@@ -28,7 +29,12 @@ public class ProjectileUtilMixin {
             return null;
         }
 
-        return RaycastUtilsKt.raytraceEntities(entity.level(), entity, startVec, endVec, aABB, predicate, distance, originalHit);
+        EntityHitResult shipyardEntityHitResult = RaycastUtilsKt.raytraceEntities(entity.level(), entity, startVec, endVec, aABB,
+            predicate.or((entity1 -> entity1 instanceof IComplexRaycast)), distance, originalHit);
+        if (shipyardEntityHitResult != null && shipyardEntityHitResult.getEntity() instanceof IComplexRaycast) {
+            return null; // need to call the powergrid stuff here
+        } else {
+            return shipyardEntityHitResult;
+        }
     }
-
 }

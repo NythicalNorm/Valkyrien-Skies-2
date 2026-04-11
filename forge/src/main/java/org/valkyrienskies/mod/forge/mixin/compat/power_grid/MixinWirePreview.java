@@ -1,9 +1,10 @@
-package org.valkyrienskies.mod.mixin.mod_compat.power_grid;
+package org.valkyrienskies.mod.forge.mixin.compat.power_grid;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -17,16 +18,17 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 @Mixin(WirePreview.class)
 public class MixinWirePreview {
     @WrapOperation (
-        method = "render",
+        method = "tick",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/HitResult;getLocation()Lnet/minecraft/world/phys/Vec3;"),
         remap = false
     )
     private static Vec3 changeHitResultIfInShipyard(HitResult instance, Operation<Vec3> original,
-        @Local(argsOnly = true, name = "arg3") LocalPlayer player, @Local(name = "endpoint") IWireEndpoint endpoint) {
+        @Local(name = "endpoint") IWireEndpoint endpoint) {
         Vec3 ogPos = original.call(instance);
+        ClientLevel level = Minecraft.getInstance().level;
 
-        if (VSGameUtilsKt.isBlockInShipyard(player.level(), endpoint.getExactPosition(player.level()))) {
-            return CompatUtil.INSTANCE.toSameSpaceAs(player.level(), ogPos, endpoint.getExactPosition(player.level()));
+        if (VSGameUtilsKt.isBlockInShipyard(level, endpoint.getExactPosition(level))) {
+            return CompatUtil.INSTANCE.toSameSpaceAs(level, ogPos, endpoint.getExactPosition(level));
         }
         return ogPos;
     }

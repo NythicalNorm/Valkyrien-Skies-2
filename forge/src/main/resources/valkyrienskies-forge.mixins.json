@@ -21,6 +21,8 @@
     "compat.mffs.MixinClientPacketHandler",
     "compat.mffs.MixinFrequencyGrid",
     "compat.modular_routers.MixinRouterMenu",
+    "compat.power_grid.MixinTerminalHandler",
+    "compat.power_grid.MixinWireItem",
     "compat.thermalexpansion.MixinTileCoFH",
     "compat.twilightforest.ChunkGeneratorTwilightMixin",
     "entity.MixinContainerEntity",
@@ -42,6 +44,7 @@
     "compat.oc2r.MixinComputerRenderer",
     "compat.oc2r.MixinMonitorRenderer",
     "compat.oc2r.MixinProjectorDepthRenderer",
+    "compat.power_grid.MixinWirePreview",
     "compat.sodium.MixinSodiumWorldRenderer"
   ],
   "injectors": {
